@@ -2,12 +2,20 @@
 //
 
 #include "pch.h"
+#include "Matrix.h"
 #include <iostream>
+
 
 int main()
 {
-    
-	return 0;//std::cout << "Hello World!\n"; 
+	//char a[] = "[1, 1;1, 1]";
+	//Matrix A = Matrix(a);
+	//int len, wid;
+	//cin >> len >> wid;
+	
+	Matrix A = Matrix::StringToMatrix("[1, 1;1, 1]");
+	cout << A;
+	return 0;
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
