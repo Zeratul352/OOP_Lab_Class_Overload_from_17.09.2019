@@ -9,12 +9,45 @@ void Matrix::Create()
 	for (int i = 0; i < length; i++) {
 		matrix[i] = new double [width];
 	}
-	cout << "Matrix.ctor(" << length << ", " << width << ")" << endl;
+	//cout << "Matrix.ctor(" << length << ", " << width << ")" << endl;
 }
 
 bool Matrix::Overflow(double obj, double a)
 {
-	if ((obj >= 0) && (obj + a >= 0)) {
+	
+	if ((obj >= 0) && (a >= 0)) {
+		if (obj + a >= 0) {
+			return true;
+		}
+	}
+	
+	else if ((obj >= 0) && (a < 0)) {
+		if (obj >= -a) {
+			return true;
+		}
+		else {
+			if (obj + a < 0) {
+				return true;
+			}
+		}
+	}
+	else if ((obj < 0) && (a >= 0)) {
+		if (-obj >= a) {
+			return true;
+		}
+		else {
+			if (-obj - a < 0) {
+				return true;
+			}
+		}
+	}
+	else if ((obj < 0) && (a < 0)) {
+		if (obj + a < 0) {
+			return true;
+		}
+	}
+	return false;
+	/*if ((obj >= 0) && (obj + a >= 0)) {
 		return true;
 	}
 	else if ((obj <= 0) && (obj + a <= 0)) {
@@ -22,51 +55,62 @@ bool Matrix::Overflow(double obj, double a)
 	}
 	else {
 		return false;
-	}
+	}*/
 }
 
 Matrix Matrix::StringToMatrix(string str)
 {
 	const char *line = str.c_str();
-	char elements[] = "-1234567890,;.[]";
+	char elements[] = "[-1234567890,;.]";
 	char numbers[] = "1234567890";
 	int koma = 0;
 	int point = 0;
-	if ((line[0] == '[') && (line[strlen(line) - 1] == ']')) {
-		
-		for (int i = 0; i < strlen(line); i++) {
-			char m = line[i];
-			if (line[i] == ',') {
-				if ((line[i-1] < '0') || (line[i-1] > '9')) {
-					return Zero;
-				}	
-			}
-			else if (line[i] == ';') {
-				if ((line[i - 1] < '0') || (line[i - 1] > '9')) {
-					return Zero;
+	
+		if ((line[0] == '[') && (line[strlen(line) - 1] == ']')) {
+
+			for (int i = 1; i < strlen(line); i++) {
+				char m = line[i];
+				if (line[i] == ',') {
+					if ((line[i - 1] < '0') || (line[i - 1] > '9')) {
+						throw Exeption1();
+						return Zero;
+					}
 				}
-				point++;
-			}
-			else if (!strcspn(elements, &m)) {
-				return Zero;
+				else if (line[i] == ';') {
+					if ((line[i - 1] < '0') || (line[i - 1] > '9')) {
+						throw Exeption1();
+						return Zero;
+					}
+					point++;
+				}
+				/*else {
+					//cout << m << "\n";
+					if (!strcspn(elements, &m)) {
+						cout << m << "\n";
+						throw Exeption1();
+						return Zero;
+					}
+				}*/
 			}
 		}
-	}
+	
 	int m = 0;
-	while (line[m] != ';') {
+	while ((line[m] != ';') && (line[m] != ']')) {
 		if (line[m] == ',') {
 			koma++;
 		}
 		m++;
 	}
+	int komas = 0;
 	for (int i = 0; i < strlen(line); i++) {
-		int komas = 0;
+		
 		if (line[i] == ',') {
 			komas++;
 		}
-		else if (line[i] == ';') {
+		else if ((line[i] == ';') || (line[i] == ']')) {
 			if (koma != komas) {
-				return Zero;
+				throw Exeption1();
+				//return Zero;
 			}
 			else {
 				komas = 0;
@@ -79,7 +123,7 @@ Matrix Matrix::StringToMatrix(string str)
 	int i1 = 0;
 	int j1 = 0;
 	Matrix matr = Matrix(len, wid);
-	char charline[1000];
+	char charline[20000];
 	for (int i = 0; i < strlen(line); i++) {
 		charline[i] = line[i];
 	}
@@ -88,15 +132,15 @@ Matrix Matrix::StringToMatrix(string str)
 		double a = atof(charline);
 		matr.SetElem(i1, j1, a);
 		int i = 1;
-		while ((charline[i] != ';') || (charline[i] != ',') || (charline[i] != ']')) {
+		while ((charline[i] != ';') && (charline[i] != ',') && (charline[i] != ']')) {
 			charline[i] = ' ';
 			i++;
 		}
-		if ((charline[i] != ';')) {
+		if ((charline[i] == ';')) {
 			i1++;
 			j1 = 0;
 		}
-		else if (charline[i] != ',') {
+		else if (charline[i] == ',') {
 			j1++;
 		}
 		charline[i] = ' ';
@@ -143,7 +187,7 @@ Matrix Matrix::StringToMatrix(string str)
 
 Matrix::Matrix()
 {
-	cout << "constructor" << endl;
+	//cout << "constructor" << endl;
 }
 
 Matrix::Matrix(int len, int wid)
@@ -157,7 +201,7 @@ Matrix::Matrix(int len, int wid)
 
 Matrix::Matrix(int elem)
 {
-	cout << "constructor" << endl;
+	//cout << "constructor" << endl;
 	length = 1;
 	width = 1;
 	Create();
@@ -166,7 +210,7 @@ Matrix::Matrix(int elem)
 
 Matrix::Matrix(int len, int wid, double ** matr)
 {
-	cout << "constructor" << endl;
+	//cout << "constructor" << endl;
 	length = len;
 	width = wid;
 	Create();
@@ -177,14 +221,15 @@ Matrix::Matrix(int len, int wid, double ** matr)
 	}
 }
 
-Matrix::Matrix(char* line)
+Matrix::Matrix(string str)
 {
+	const char *line = str.c_str();
 	*this = StringToMatrix(line);
 }
 
 Matrix::Matrix(const Matrix & object)
 {
-	cout << "copy constructor" << endl;
+	//cout << "copy constructor" << endl;
 	length = object.GetConstLength();
 	width = object.GetConstWidth();
 	Create();
@@ -194,6 +239,7 @@ Matrix::Matrix(const Matrix & object)
 			matrix[i][j] = object.GetConstElem(i, j);
 		}
 	}
+
 }
 
 Matrix Matrix::CreateNew()
@@ -207,15 +253,37 @@ Matrix Matrix::CreateNew()
 	return matrix;
 }
 
+/*void Matrix::FloydAlgorythm()
+{
+	for (int i = 0; i < length; i++) {
+		for (int j = 0; j < width; j++) {
+			if (matrix[i][j] == 0) {
+				matrix[i][j] = 10000.0;
+			}
+		}
+	}
+	for (int i = 0; i < length; i++) {
+		for (int j = 0; j < length; j++) {
+			for (int k = 0; k < length; k++) {
+				matrix[i][j] = min(matrix[i][j], matrix[i][k] + matrix[k][j]);
+			}
+		}
+	}
+	
+}*/
+
 Matrix Matrix::operator+(double a)
 {
-	if (this->width != this->length) {
-		return Zero;
-	}
+	
+		if (this->width != this->length) {
+			throw Exception4();
+		}
+	
+	
 	Matrix matr = Matrix(this->length, this->width, this->matrix);
 	for (int i = 0; i < this->length; i++) {
 		if (Overflow(matrix[i][i], a)){
-			SetElem(i, i, GetElem(i, i) + a);
+			matr.SetElem(i, i, GetElem(i, i) + a);
 		}
 		else {
 			return Zero;
@@ -223,20 +291,30 @@ Matrix Matrix::operator+(double a)
 	}
 	return matr;
 }
-Matrix Matrix::operator+(char * line)
+Matrix Matrix::operator+(string str)
 {
+	const char *line = str.c_str();
 	double a = atof(line);
-	return *this + a;
+	if (a != 0) {
+		Matrix A = *this;
+		return A + a;
+	}
+	
+	Matrix A = StringToMatrix(str);
+	
+	return *this + A;
 }
 Matrix Matrix::operator-(double a)
 {
-	if (this->width != this->length) {
-		return Zero;
-	}
+	
+		if (this->width != this->length) {
+			throw Exception4();
+		}
+	
 	Matrix matr = Matrix(this->length, this->width, this->matrix);
 	for (int i = 0; i < this->length; i++) {
 		if (Overflow(matrix[i][i], -a)) {
-			SetElem(i, i, GetElem(i, i) - a);
+			matr.SetElem(i, i, GetElem(i, i) - a);
 		}
 		else {
 			return Zero;
@@ -244,10 +322,17 @@ Matrix Matrix::operator-(double a)
 	}
 	return matr;
 }
-Matrix Matrix::operator-(char * line)
+Matrix Matrix::operator-(string str)
 {
+	const char *line = str.c_str();
 	double a = atof(line);
-	return *this - a;
+	if (a != 0) {
+		return *this - a;
+	}
+
+	Matrix A = StringToMatrix(str);
+
+	return *this - A;
 }
 Matrix Matrix::operator*(double a)
 {
@@ -255,22 +340,29 @@ Matrix Matrix::operator*(double a)
 	Matrix matr = Matrix(this->length, this->width, this->matrix);
 	for (int i = 0; i < this->length; i++) {
 		for (int j = 0; j < width; j++) {
-			SetElem(i, j, GetElem(i, j) * a);
+			matr.SetElem(i, j, GetElem(i, j) * a);
 		}
 		
 	}
 	return matr;
 }
 
-Matrix Matrix::operator*(char * line)
+Matrix Matrix::operator*(string str)
 {
+	const char *line = str.c_str();
 	double a = atof(line);
-	return *this * a;
+	if (a != 0) {
+		return *this * a;
+	} 
+
+	Matrix A = StringToMatrix(str);
+
+	return *this * A;
 }
 
 Matrix Matrix::operator/(double a)
 {
-	if (a == 0) {
+	/*if (a == 0) {
 		double ** mat = new double*[1];
 		for (int i = 0; i < 1; i++) {
 			mat[i] = new double[1];
@@ -278,27 +370,41 @@ Matrix Matrix::operator/(double a)
 		mat[0][0] = 0;
 		Matrix matr = Matrix(1, 1, mat);
 		return matr;
-	}
+	}*/
+	
+		if (a == 0) {
+			throw Exception3();
+		}
+	
 	Matrix matr = Matrix(this->length, this->width, this->matrix);
 	for (int i = 0; i < this->length; i++) {
 		for (int j = 0; j < width; j++) {
-			SetElem(i, j, GetElem(i, j) / a);
+			matr.SetElem(i, j, GetElem(i, j) / a);
 		}
 	}
 	return matr;
 }
 
-Matrix Matrix::operator/(char * line)
+Matrix Matrix::operator/(string str)
 {
+	const char *line = str.c_str();
 	double a = atof(line);
-	return *this / a;
+	if (a != 0) {
+		return *this / a;
+	}
+
+	Matrix A = StringToMatrix(str);
+
+	return *this / A;
 }
 
 Matrix Matrix::operator+(Matrix matrix1)
 {
-	if ((this->length != matrix1.GetLength()) || (this->width != matrix1.GetWidth())) {
-		return Zero;
-	}
+	
+		if ((this->length != matrix1.GetLength()) || (this->width != matrix1.GetWidth())) {
+			throw Exception4();
+		}
+	
 	Matrix matr = Matrix(this->length, this->width, this->matrix);
 	for (int i = 0; i < this->length; i++) {
 		for (int j = 0; j < this->width; j++) {
@@ -316,7 +422,7 @@ Matrix Matrix::operator+(Matrix matrix1)
 Matrix Matrix::operator-(Matrix matrix1)
 {
 	if ((this->length != matrix1.GetLength()) || (this->width != matrix1.GetWidth())) {
-		return Zero;
+		throw Exception4();
 	}
 	Matrix matr = Matrix(this->length, this->width, this->matrix);
 	for (int i = 0; i < this->length; i++) {
@@ -333,9 +439,11 @@ Matrix Matrix::operator-(Matrix matrix1)
 }
 Matrix Matrix::operator*(Matrix matrix1)
 {
-	if (this->width != matrix1.GetLength()) {
-		return Zero;
-	}
+	
+		if (this->width != matrix1.GetLength()) {
+			throw Exception4();
+		}
+	
 	Matrix matr = Matrix(this->length, matrix1.GetWidth());
 
 	for (int i = 0; i < this->length; i++) {
@@ -350,9 +458,7 @@ Matrix Matrix::operator*(Matrix matrix1)
 }
 
 Matrix Matrix::operator/(Matrix matrix1) {
-	Matrix matr = Matrix(1, 1);
-	matr.SetElem(0, 0, 0);
-	return matr;
+	return Zero;
 }
 
 Matrix & Matrix::operator+=(double a)
@@ -365,8 +471,7 @@ Matrix & Matrix::operator+=(double a)
 		mat[0][0] = 0;
 		Matrix matr = Matrix(1, 1, mat);
 		return matr;*/
-		*this = Zero;
-		return *this;
+		throw Exception4();
 	}
 	for (int i = 0; i < this->GetLength(); i++) {
 		if (Overflow(matrix[i][i], a)) {
@@ -380,14 +485,23 @@ Matrix & Matrix::operator+=(double a)
 	}
 	return *this;
 }
-Matrix & Matrix::operator+=(char * line)
+Matrix & Matrix::operator+=(string str)
 {
+	const char *line = str.c_str();
 	double a = atof(line);
-	return *this += a;
+	if (a != 0) {
+		*this = *this + a;
+		return *this;
+	}
+
+	Matrix A = StringToMatrix(str);
+	*this = *this + A;
+	return *this;
 }
 Matrix & Matrix::operator-=(double a)
 {
 	if (this->GetLength() != this->GetWidth()) {
+		throw Exception4();
 		*this = Zero;
 		return *this;
 	}
@@ -402,10 +516,18 @@ Matrix & Matrix::operator-=(double a)
 	}
 	return *this;
 }
-Matrix & Matrix::operator-=(char * line)
+Matrix & Matrix::operator-=(string str)
 {
+	const char *line = str.c_str();
 	double a = atof(line);
-	return *this -= a;
+	if (a != 0) {
+		*this = *this - a;
+		return *this;
+	}
+
+	Matrix A = StringToMatrix(str);
+	*this = *this - A;
+	return *this;
 }
 Matrix & Matrix::operator*=(double a)
 {
@@ -416,14 +538,23 @@ Matrix & Matrix::operator*=(double a)
 	}
 	return *this;
 }
-Matrix & Matrix::operator*=(char * line)
+Matrix & Matrix::operator*=(string str)
 {
+	const char *line = str.c_str();
 	double a = atof(line);
-	return *this *= a;
+	if (a != 0) {
+		*this = *this * a;
+		return *this;
+	}
+
+	Matrix A = StringToMatrix(str);
+	*this = *this * A;
+	return *this;
 }
 Matrix & Matrix::operator/=(double a)
 {
 	if (a == 0) {
+		throw Exception3();
 		*this = Zero;
 		return *this;
 	}
@@ -434,14 +565,23 @@ Matrix & Matrix::operator/=(double a)
 	}
 	return *this;
 }
-Matrix & Matrix::operator/=(char * line)
+Matrix & Matrix::operator/=(string str)
 {
+	const char *line = str.c_str();
 	double a = atof(line);
-	return *this /= a;
+	if (a != 0) {
+		*this = *this / a;
+		return *this;
+	}
+
+	Matrix A = StringToMatrix(str);
+	*this = *this / A;
+	return *this;
 }
 Matrix & Matrix::operator+=(Matrix matrix1)
 {
 	if ((this->length != matrix1.GetLength()) || (this->width != matrix1.GetWidth())) {
+		throw Exception4();
 		*this = Zero;
 		return *this;
 	}
@@ -463,6 +603,7 @@ Matrix & Matrix::operator+=(Matrix matrix1)
 Matrix & Matrix::operator-=(Matrix matrix1)
 {
 	if ((this->length != matrix1.GetLength()) || (this->width != matrix1.GetWidth())) {
+		throw Exception4();
 		*this = Zero;
 		return *this;
 	}
@@ -483,6 +624,7 @@ Matrix & Matrix::operator-=(Matrix matrix1)
 Matrix & Matrix::operator*=(Matrix matrix1)
 {
 	if (this->width != matrix1.GetLength()) {
+		throw Exception4();
 		*this = Zero;
 		return *this;
 	}
@@ -508,6 +650,7 @@ Matrix & Matrix::operator*=(Matrix matrix1)
 	return *this;
 }
 Matrix & Matrix::operator/=(Matrix matrix1) {
+	throw Exception3();
 	*this = Zero;
 	return *this;
 }
@@ -515,6 +658,7 @@ Matrix & Matrix::operator/=(Matrix matrix1) {
 Matrix & Matrix::operator++()
 {
 	if (this->length != this->width) {
+		throw Exception4();
 		*this = Zero;
 		return *this;
 	}
@@ -533,6 +677,7 @@ Matrix & Matrix::operator++()
 Matrix Matrix::operator++(int) {
 	Matrix temp = *this;
 	if (this->length != this->width) {
+		throw Exception4();
 		*this = Zero;
 		return *this;
 	}
@@ -551,6 +696,7 @@ Matrix Matrix::operator++(int) {
 Matrix & Matrix::operator--()
 {
 	if (this->length != this->width) {
+		throw Exception4();
 		*this = Zero;
 		return *this;
 	}
@@ -579,6 +725,7 @@ Matrix Matrix::operator--(int) {
 		for (int i = 0; i < this->length; i++) {
 			this->matrix[i] = new double[this->width];
 		}*/
+		throw Exception4();
 		*this = Zero;
 		return *this;
 	}
@@ -650,6 +797,14 @@ bool Matrix::operator!=(Matrix matrix1)
 	return false;
 }
 
+const double * Matrix::operator[](int i)
+{
+	if ((i < 0) || (i >= length)) {
+		throw Exception2();
+	}
+	return matrix[i];
+}
+
 Matrix& Matrix::operator=(const Matrix & object)
 {
 	if (this != &object) {
@@ -677,16 +832,34 @@ Matrix& Matrix::operator=(const Matrix & object)
 
 void Matrix::SetElem(int i, int j, double number)
 {
+	if ((i < 0) || (i >= length)) {
+		throw Exception2();
+	}
+	else if ((j < 0) || (j >= width)) {
+		throw Exception2();
+	}
 	matrix[i][j] = number;
 }
 
 double Matrix::GetElem(int i, int j)
 {
+	if ((i < 0) || (i >= length)) {
+		throw Exception2();
+	}
+	else if ((j < 0) || (j >= width)) {
+		throw Exception2();
+	}
 	return matrix[i][j];
 }
 
 double Matrix::GetConstElem(int i, int j) const
 {
+	if ((i < 0) || (i >= length)) {
+		throw Exception2();
+	}
+	else if ((j < 0) || (j >= width)) {
+		throw Exception2();
+	}
 	return matrix[i][j];
 }
 
@@ -724,23 +897,39 @@ double Matrix::GetSumOfElements(Matrix matrix)
 
 Matrix::~Matrix()
 {
-	cout << "matrix.destructor start(" << length << " , " << width << ")"<< endl;
+	//cout << "matrix.destructor start(" << length << " , " << width << ")"<< endl;
 	for (int i = 0; i < length; i++) {
 		delete[] this->matrix[i];
 	}
 	delete[] this->matrix;
-	cout << "matrix.destructor end(" << length << " , " << width << ")" << endl;
+	//cout << "matrix.destructor end(" << length << " , " << width << ")" << endl;
 }
 
 ostream & operator<<(ostream & cout, const Matrix & object)
 {
 	for (int i = 0; i < object.GetConstLength(); i++) {
 		for (int j = 0; j < object.GetConstWidth(); j++) {
-			if (object.GetConstElem(i, j )< 10) {
-				cout << "   " << object.GetConstElem(i, j);
+			double a = object.GetConstElem(i, j);
+			if ( a < 10000) {
+				if (a < 1000) {
+					if (a < 100) {
+						if (a < 10) {
+							cout << "    " << a;
+						}
+						else {
+							cout << "   " << a;
+						}
+					}
+					else {
+						cout << "  " << a;
+					}
+				}
+				else {
+					cout << " " << a;
+				}
 			}
 			else {
-				cout << "  " << object.GetConstElem(i, j);
+				cout << " " << a;
 			}
 		}
 		cout << '\n';

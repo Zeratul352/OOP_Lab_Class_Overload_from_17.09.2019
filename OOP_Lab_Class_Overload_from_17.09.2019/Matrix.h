@@ -4,6 +4,8 @@
 #include <string>
 #include <cstdio>
 #include <vector>
+#include <algorithm>
+#include "Error.h"
 using namespace std;
 class Matrix
 {
@@ -20,30 +22,31 @@ public:
 	Matrix(int len, int wid);
 	Matrix(int elem);
 	Matrix(int len, int wid, double** matr);
-	Matrix(char* line);
+	Matrix(string str);
 	Matrix(const Matrix &object);
 	Matrix CreateNew();
+	
 	static Matrix StringToMatrix(string str);
 	Matrix operator+(double a);
-	Matrix operator+(char* line);
+	Matrix operator+(string str);
 	Matrix operator+(Matrix matrix1);
 	Matrix operator-(double a);
-	Matrix operator-(char* line);
+	Matrix operator-(string str);
 	Matrix operator-(Matrix matrix1);
 	Matrix operator*(double a);
-	Matrix operator*(char* line);
+	Matrix operator*(string str);
 	Matrix operator*(Matrix matrix1);
 	Matrix operator/(double a);
-	Matrix operator/(char* line);
+	Matrix operator/(string str);
 	Matrix operator/(Matrix matrix1);
 	Matrix& operator+=(double a);
-	Matrix& operator+=(char * line);
+	Matrix& operator+=(string str);
 	Matrix& operator-=(double a);
-	Matrix& operator-=(char * line);
+	Matrix& operator-=(string str);
 	Matrix& operator*=(double a);
-	Matrix& operator*=(char * line);
+	Matrix& operator*=(string str);
 	Matrix& operator/=(double a);
-	Matrix& operator/=(char * line);
+	Matrix& operator/=(string str);
 	Matrix& operator+=(Matrix matrix1);
 	Matrix& operator-=(Matrix matrix1);
 	Matrix& operator*=(Matrix matrix1);
@@ -58,6 +61,7 @@ public:
 	bool operator<=(Matrix matrix1);
 	bool operator==(Matrix matrix1);
 	bool operator!=(Matrix matrix1);
+	const double * operator[](int i);
 	Matrix &operator=(const Matrix& object);// !!!
 	//
 // внешн€€ функци€ с константной ссылкой на объект
@@ -69,6 +73,7 @@ public:
 	int GetWidth();
 	int GetConstWidth()const;
 	double GetSumOfElements(Matrix matrix);
+	//void FloydAlgorythm();
 	~Matrix();
 };
 ostream &operator<<(ostream & cout, const Matrix& object);

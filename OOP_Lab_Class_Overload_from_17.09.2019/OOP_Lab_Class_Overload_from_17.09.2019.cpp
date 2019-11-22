@@ -1,20 +1,56 @@
 ﻿// OOP_Lab_Class_Overload_from_17.09.2019.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
-
+#define _CRT_SECURE_NO_WARNINGS
+//#define _CRT_SECURE_NO_DEPRECATE
 #include "pch.h"
 #include "Matrix.h"
+#include "Loader.h"
+#include "Sorter.h"
+#include "Error.h"
+#include "Container.h"
 #include <iostream>
 
 
 int main()
 {
-	//char a[] = "[1, 1;1, 1]";
-	//Matrix A = Matrix(a);
-	//int len, wid;
-	//cin >> len >> wid;
+	//char a[] = "[1, 1; 1a, -10000]";
+	//Matrix A;
+	try {
+		Container<Matrix> A;
+		
+		for (int i = 0; i < 4; i++) {
+			A.Add();
+		}
+		A.Sort();
+		ContainerIterator<Matrix> B = A.GetIterator();
+		while (!B.End()) {
+			cout << B.Get() << endl;
+			B.Next();
+		}
+	}
+	catch(Error e){
+		e.PrintError();
+		return 0;
+	}
+//	string str;
+//	cin >> str;
+//	Matrix B = Matrix(str);
+	//cout << B;
 	
-	Matrix A = Matrix::StringToMatrix("[1, 1;1, 1]");
-	cout << A;
+//	Matrix A = Matrix("[1, 1; 1, 1]");
+	/*try {
+		A = A / 0;
+	}
+	catch (Error e) {
+		e.PrintError();
+	}
+	try {
+		cout << A; //  +"[0, 1; 1, 0]";
+	}*/
+	
+	catch (...) {
+		cout << "Unknown error detected " << endl;
+	}
 	return 0;
 }
 
