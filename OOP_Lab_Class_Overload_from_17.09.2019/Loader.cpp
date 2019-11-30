@@ -2,7 +2,7 @@
 #include "pch.h"
 #include "Loader.h"
 
-template <typename T>
+template <class T>
 Loader<T>::Loader()
 {
 }
@@ -17,7 +17,7 @@ Loader<T>::Loader()
 	
 }*/
 
-template <typename T>
+template <class T>
 Loader<T>::~Loader()
 {
 }
@@ -33,7 +33,7 @@ ConsoleLoader<T>::ConsoleLoader()
 	cin >> num;
 	SetElem(object, i, j, num);
 }*/
-template <typename T>
+template <class T>
 T ConsoleLoader<T>::GetObject()
 {
 	T object = T();
@@ -49,12 +49,12 @@ void ConsoleLoader::SetStringMatrix(Matrix * object)
 	*object = A;
 }*/
 
-template <typename T>
+template <class T>
 ConsoleLoader<T>::~ConsoleLoader()
 {
 }
 
-template <typename T>
+template <class T>
 FileLoader<T>::FileLoader()
 {
 }
@@ -70,7 +70,7 @@ void FileLoader::SetFileElem(Matrix * object, int i, int j)
 */
 
 
-template <typename T>
+template <class T>
 T FileLoader<T>::GetObject()
 {
 	freopen("input.txt", "r", stdin);
@@ -90,7 +90,7 @@ void FileLoader::SetStringFileMatrix(Matrix * object)
 	fclose(stdin);
 }
 */
-template <typename T>
+template <class T>
 FileLoader<T>::~FileLoader()
 {
 }

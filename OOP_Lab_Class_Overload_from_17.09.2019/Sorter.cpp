@@ -3,11 +3,11 @@
 #include <ctime>
 #include <random>
 
-template <typename T>
+template <class T>
 Sorter<T>::Sorter()
 {
 }
-template <typename T>
+template <class T>
 int Sorter<T>::Compare(T first, T second)
 {
 	/*if (first.GetLength() != first.GetWidth()) {
@@ -86,16 +86,16 @@ double Sorter::GetFirstNumber(Matrix first)
 	return a;
 }*/
 
-template <typename T>
+template <class T>
 Sorter<T>::~Sorter()
 {
 }
 
-template <typename T>
+template <class T>
 UsualSort<T>::UsualSort()
 {
 }
-template <typename T>
+template <class T>
 vector <T> UsualSort<T>::Sorting(vector <T> arr)
 {
 	int number = arr.size();
@@ -112,16 +112,16 @@ vector <T> UsualSort<T>::Sorting(vector <T> arr)
 	return arr;
 }
 
-template <typename T>
+template <class T>
 UsualSort<T>::~UsualSort()
 {
 }
 
-template <typename T>
+template <class T>
 QuickSort<T>::QuickSort()
 {
 }
-template <typename T>
+template <class T>
 vector <T> QuickSort<T>::Sorting(vector <T> arr)
 {
 	int right = arr.size();
@@ -160,7 +160,7 @@ vector <T> QuickSort<T>::Sorting(vector <T> arr)
 	return arr;
 }
 
-template <typename T>
+template <class T>
 QuickSort<T>::~QuickSort()
 {
 }

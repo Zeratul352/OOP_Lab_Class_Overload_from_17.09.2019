@@ -170,3 +170,28 @@ BadInputException & BadInputException::operator=(const BadInputException & objec
 BadInputException::~BadInputException()
 {
 }
+
+
+BadCommandException::BadCommandException():Error(7, "Can't process requested command or there too much of them")
+{
+}
+
+BadCommandException::BadCommandException(const BadCommandException & object)
+{
+	errortype = object.errortype;
+	errorcontent = object.errorcontent;
+}
+
+
+BadCommandException & BadCommandException::operator=(const BadCommandException & object)
+{
+	if (&object != this) {
+		errortype = object.errortype;
+		errorcontent = object.errorcontent;
+	}
+	return *this;
+}
+
+BadCommandException::~BadCommandException()
+{
+}

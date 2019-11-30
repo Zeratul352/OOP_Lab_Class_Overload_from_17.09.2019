@@ -4,8 +4,7 @@
 //#define _CRT_SECURE_NO_DEPRECATE
 #include "pch.h"
 #include "Matrix.h"
-#include "Loader.h"
-#include "Sorter.h"
+
 #include "Error.h"
 #include "Container.h"
 #include <iostream>

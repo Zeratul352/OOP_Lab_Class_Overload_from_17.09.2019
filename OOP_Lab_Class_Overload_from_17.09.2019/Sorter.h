@@ -1,6 +1,7 @@
 #pragma once
 #include "Matrix.h"
-template <typename T>
+#include "Container.h"
+template <class T>
 class Sorter
 {
 protected:
@@ -12,7 +13,7 @@ public:
 	virtual vector<T> Sorting(vector <T> arr) = 0;
 	~Sorter();
 };
-template <typename T>
+template <class T>
 class UsualSort :
 	public Sorter<T>
 {	
@@ -21,7 +22,7 @@ public:
 	virtual vector <T> Sorting(vector <T> arr);
 	~UsualSort();
 };
-template <typename T>
+template <class T>
 class QuickSort :
 	public Sorter<T>
 {

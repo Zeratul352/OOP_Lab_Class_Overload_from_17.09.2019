@@ -1,7 +1,8 @@
 #pragma once
 #include "Matrix.h"
+#include "Container.h"
 #include <cstdio>
-template <typename T>
+template <class T>
 class Loader
 {
 public:
@@ -11,7 +12,8 @@ public:
 	//void SetMatrix(Matrix * object);
 	~Loader();
 };
-template <typename T>
+
+template <class T>
 class ConsoleLoader :
 	public Loader<T>
 {
@@ -22,7 +24,7 @@ public:
 	//void SetStringMatrix(Matrix * object);
 	~ConsoleLoader();
 };
-template <typename T>
+template <class T>
 class FileLoader :
 	public Loader<T>
 {

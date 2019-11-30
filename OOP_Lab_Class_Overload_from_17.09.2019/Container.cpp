@@ -1,18 +1,18 @@
 #include "pch.h"
 #include "Container.h"
 
-template <typename T>
+template <class T>
 Iterator<T>::Iterator()
 {
 }
 
-template <typename T>
+template <class T>
 Iterator<T>::~Iterator()
 {
 }
 
 //Matrix Z = Matrix(0);
-template <typename T>
+template <class T>
 Container<T>::Container(): loader(new ConsoleLoader), sorter(new UsualSort)
 {
 	
@@ -68,7 +68,7 @@ void Container::UsualSorting()
 	delete array;
 	box = m_usorter->Sorting(box);
 }*/
-template <typename T>
+template <class T>
 void Container<T>::Sort()
 {
 	/*Matrix * array = new Matrix[box.size()];
@@ -82,13 +82,13 @@ void Container<T>::Sort()
 	delete array;*/
 	box = sorter->Sorting(box);
 }
-template <typename T>
+template <class T>
 void Container<T>::Add()
 {
 	
 	box.push_back(loader->GetObject());
 }
-template <typename T>
+template <class T>
 void Container<T>::SwitchLoader(string type)
 {
 	
@@ -105,7 +105,7 @@ void Container<T>::SwitchLoader(string type)
 		loader = p;
 	}
 }
-template <typename T>
+template <class T>
 void Container<T>::SwitchSorter(string type)
 {
 	if (type == "usual") {
@@ -117,12 +117,41 @@ void Container<T>::SwitchSorter(string type)
 		sorter = p;
 	}
 }
-template <typename T>
+template<class T>
+void Container<T>::AddCommand(string line)
+{
+	commandline.push_back(line);
+}
+template<class T>
+void Container<T>::SetCommandLine(vector<string> line)
+{
+	commandline = line;
+}
+/*template<class T>
+T Container<T>::Calculate()
+{
+	T item = box[0];
+	CommandMap<T> FunctorMap = CommandMap<T>(commandline);
+	int lim;
+	if (box.size() > commandline.size()) {
+		lim = commandline.size();
+	}
+	else {
+		lim = box.size();
+	}
+	for (int i = 0; i < lim; i++) {
+		//item = FunctorMap.
+	}
+	return item;
+}*/
+	
+
+template <class T>
 ContainerIterator<T> Container<T>::GetIterator()
 {
 	return ContainerIterator<T>(&box, box.size());
 }
-template <typename T>
+template <class T>
 void Container<T>::Delete(int number)
 {
 	if (number >= box.size()) {
@@ -130,14 +159,14 @@ void Container<T>::Delete(int number)
 	}
 	box.erase(box.begin() + number);
 }
-template <typename T>
+template <class T>
 void Container<T>::Print()
 {
 	for (int i = 0; i < box.size(); i++) {
 		cout << box[i] << endl;
 	}
 }
-template <typename T>
+template <class T>
 T Container<T>::operator[](int a)
 {
 	if (a >= box.size()  ||  a<0) {
@@ -148,12 +177,12 @@ T Container<T>::operator[](int a)
 
 
 
-template <typename T>
+template <class T>
 Container<T>::~Container()
 {
 }
 
-template <typename T>
+template <class T>
 ContainerIterator<T>::ContainerIterator(vector <T> * arr, int s) {
 
 	size = s;
@@ -161,12 +190,12 @@ ContainerIterator<T>::ContainerIterator(vector <T> * arr, int s) {
 	array = p;
 }
 
-template <typename T>
+template <class T>
 void ContainerIterator<T>::Next()
 {
 	i++;
 }
-template <typename T>
+template <class T>
 bool ContainerIterator<T>::End()
 {
 	if (i == size) {
@@ -174,13 +203,31 @@ bool ContainerIterator<T>::End()
 	}
 	return false;
 }
-template <typename T>
+template <class T>
 T ContainerIterator<T>::Get()
 {
 	return (*array)[i];
 }
 
-template <typename T>
+template <class T>
 ContainerIterator<T>::~ContainerIterator()
+{
+}
+
+
+
+
+template <class T>
+Calculator<T>::~Calculator()
+{
+}
+
+template <class T>
+CommandMap<T>::CommandMap()
+{
+}
+
+template <class T>
+CommandMap<T>::~CommandMap()
 {
 }

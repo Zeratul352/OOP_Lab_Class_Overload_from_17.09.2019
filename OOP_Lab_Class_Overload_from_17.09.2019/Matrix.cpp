@@ -461,6 +461,26 @@ Matrix Matrix::operator/(Matrix matrix1) {
 	return Zero;
 }
 
+Matrix Matrix::Plus(Matrix first, Matrix second)
+{
+	return first + second;
+}
+
+Matrix Matrix::Minus(Matrix first, Matrix second)
+{
+	return first - second;
+}
+
+Matrix Matrix::Multiply(Matrix first, Matrix second)
+{
+	return first * second;
+}
+
+Matrix Matrix::Devide(Matrix first, Matrix second)
+{
+	return first / second;
+}
+
 Matrix & Matrix::operator+=(double a)
 {
 	if (this->GetLength() != this->GetWidth()) {
@@ -561,6 +581,15 @@ Matrix & Matrix::operator/=(double a)
 	for (int i = 0; i < this->GetLength(); i++) {
 		for (int j = 0; j < width; j++) {
 			SetElem(i, j, GetElem(i, j) / a);
+		}
+	}
+	return *this;
+}
+Matrix & Matrix::operator%=(int a)
+{
+	for (int i = 0; i < length; i++) {
+		for (int j = 0; j < width; j++) {
+			matrix[i][j] = fmod(matrix[i][j], a);
 		}
 	}
 	return *this;

@@ -39,6 +39,10 @@ public:
 	Matrix operator/(double a);
 	Matrix operator/(string str);
 	Matrix operator/(Matrix matrix1);
+	static Matrix Plus(Matrix first, Matrix second);
+	static Matrix Minus(Matrix first, Matrix second);
+	static Matrix Multiply(Matrix first, Matrix second);
+	static Matrix Devide(Matrix first, Matrix second);
 	Matrix& operator+=(double a);
 	Matrix& operator+=(string str);
 	Matrix& operator-=(double a);
@@ -46,6 +50,7 @@ public:
 	Matrix& operator*=(double a);
 	Matrix& operator*=(string str);
 	Matrix& operator/=(double a);
+	Matrix& operator%=(int a);
 	Matrix& operator/=(string str);
 	Matrix& operator+=(Matrix matrix1);
 	Matrix& operator-=(Matrix matrix1);

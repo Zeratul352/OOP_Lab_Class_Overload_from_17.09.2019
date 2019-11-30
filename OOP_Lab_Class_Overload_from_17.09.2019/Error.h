@@ -77,3 +77,14 @@ public:
 	BadInputException & operator=(const BadInputException& object);
 	~BadInputException();
 };
+
+class BadCommandException :
+	public Error
+{
+public:
+	BadCommandException();
+	BadCommandException(const BadCommandException& object);
+	BadCommandException & operator=(const BadCommandException& object);
+	~BadCommandException();
+};
+
