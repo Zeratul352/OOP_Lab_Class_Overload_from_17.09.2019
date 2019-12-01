@@ -50,7 +50,7 @@ public:
 	Matrix& operator*=(double a);
 	Matrix& operator*=(string str);
 	Matrix& operator/=(double a);
-	Matrix& operator%=(int a);
+	Matrix Module(int a);
 	Matrix& operator/=(string str);
 	Matrix& operator+=(Matrix matrix1);
 	Matrix& operator-=(Matrix matrix1);

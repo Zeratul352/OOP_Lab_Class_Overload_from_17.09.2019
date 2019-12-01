@@ -244,11 +244,11 @@ Matrix::Matrix(const Matrix & object)
 
 Matrix Matrix::CreateNew()
 {
-	cout << "Input length << width of your matrix" << endl;
+	//cout << "Input length << width of your matrix" << endl;
 	int len, wid;
 	cin >> len >> wid;
 	Matrix matrix = Matrix(len, wid);
-	cout << "now input elements of your matrix" << endl;
+	//cout << "now input elements of your matrix" << endl;
 	cin >> matrix;
 	return matrix;
 }
@@ -585,8 +585,12 @@ Matrix & Matrix::operator/=(double a)
 	}
 	return *this;
 }
-Matrix & Matrix::operator%=(int a)
+
+Matrix Matrix::Module(int a)
 {
+	if (a == 0) {
+		return *this;
+	}
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < width; j++) {
 			matrix[i][j] = fmod(matrix[i][j], a);
@@ -594,6 +598,7 @@ Matrix & Matrix::operator%=(int a)
 	}
 	return *this;
 }
+
 Matrix & Matrix::operator/=(string str)
 {
 	const char *line = str.c_str();

@@ -4,7 +4,6 @@
 //#define _CRT_SECURE_NO_DEPRECATE
 #include "pch.h"
 #include "Matrix.h"
-
 #include "Error.h"
 #include "Container.h"
 #include <iostream>
@@ -21,11 +20,15 @@ int main()
 			A.Add();
 		}
 		A.Sort();
-		ContainerIterator<Matrix> B = A.GetIterator();
-		while (!B.End()) {
-			cout << B.Get() << endl;
-			B.Next();
+		//ContainerIterator<Matrix> B = A.GetIterator();
+		vector <string> operations;
+		for (int i = 0; i < 3; i++) {
+			string a;
+			cin >> a;
+			operations.push_back(a);
 		}
+		A.SetCommandLine(operations);
+		cout << A.Calculate();
 	}
 	catch(Error e){
 		e.PrintError();

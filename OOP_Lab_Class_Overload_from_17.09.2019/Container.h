@@ -13,10 +13,10 @@ template <class T>
 class Iterator
 {
 public:
-	Iterator();
+	Iterator() {}
 	virtual void Next() = 0;
 	virtual T Get() = 0;
-	~Iterator();
+	~Iterator(){}
 };
 template <class T>
 class ContainerIterator :
@@ -27,11 +27,27 @@ class ContainerIterator :
 	//vector <Matrix> & array;
 	shared_ptr<vector<T>> array;
 public:
-	ContainerIterator(vector <T> * arr, int s);
-	virtual void Next();
-	bool End();
-	virtual T Get();
-	~ContainerIterator();
+	ContainerIterator(vector <T> * arr, int s) {
+
+		size = s;
+		shared_ptr<vector<T>> p(arr);
+		array = p;
+	}
+	virtual void Next() {
+		i++;
+	}
+	bool End() {
+		{
+			if (i == size) {
+				return true;
+			}
+			return false;
+		}
+	}
+	virtual T Get() {
+		return (*array)[i];
+	}
+	~ContainerIterator(){}
 };
 template <class T>
 class Loader
@@ -52,9 +68,10 @@ public:
 	ConsoleLoader(){}
 	//void SetConsoleElem(Matrix * object, int i, int j);
 	virtual T GetObject() {
+		
 		T object = T();
-		cin >> T;
-		return T;
+		object = object.CreateNew();
+		return object;
 	}
 	//void SetStringMatrix(Matrix * object);
 	~ConsoleLoader(){}
@@ -69,7 +86,7 @@ public:
 	virtual T GetObject() {
 		freopen("input.txt", "r", stdin);
 		T A = T();
-		cin >> A;
+		A = A.CreateNew();
 		fclose(stdin);
 		return A;
 	}
@@ -113,8 +130,8 @@ public:
 		int number = arr.size();
 		for (int i = 0; i < number - 1; i++) {
 			for (int j = 0; j < number - 1 - i; j++) {
-				int command = Compare(arr[j], arr[j + 1]);
-				if (command == 1) {
+				
+				if (arr[j] > arr[j + 1]) {
 					Matrix temp = arr[j];
 					arr[j] = arr[j + 1];
 					arr[j + 1] = temp;
@@ -154,7 +171,7 @@ class Calculator
 	T(*action)(T first, T second);
 	int module;
 public:
-	//Calculator();
+	Calculator(){}
 	Calculator(string line) {
 		char operation = line[0];
 		line.erase(line.begin());
@@ -168,44 +185,61 @@ public:
 		switch (operation) {
 		case '+': {
 			action = T::Plus;
+			break;
 		}
 		case '-': {
 			action = T::Minus;
+			break;
 		}
 		case '*': {
 			action = T::Multiply;
+			break;
 		}
 		case '/': {
 			action = T::Devide;
+			break;
 		}
 		default:throw BadCommandException();
 		}
 	}
 	//Calculator(char k, int a) :operation(k), module(a) {}
 	T operator()(T first, T second) {
-		return action(first, second) % module;
+		return action(first, second).Module(module);
 	}
-	~Calculator();
+	~Calculator(){}
+};
+
+template <class T>
+class CalcFunctor
+{
+	T someObject;
+public:
+	CalcFunctor():someObject(0){}
+	CalcFunctor operator()(T object) {
+		return someObject + object;
+	}
+	~CalcFunctor() {}
 };
 template <class T>
 class CommandMap
 {
-	multimap <string, Calculator<T>> commands;
+	map <string, Calculator<T>> commands;
 public:
-	CommandMap();
+	CommandMap(){}
 	CommandMap(vector <string> commandline) {
-		commands = multimap<string, Calculator<T>>(commandline.size());
+		//commands = map<string, Calculator<T>>(commandline.size());
 		for (int i = 0; i < commandline.size(); i++) {
 			Calculator<T> functor = Calculator<T>(commandline[i]);
-			commands[i]->first = commandline[i];
-			commands[i]->second = functor;
-			//commands.insert(pair<string, Calculator<T>>(commandline[i], functor);
+			//commands[i]->first = commandline[i];
+			//commands[i]->second = functor;
+			commands.insert(pair<string, Calculator<T>>(commandline[i], functor));
 		}
 	}
-	Calculator<T> GetFunctor(int index) {
-		return commands[index]->second;
+	Calculator<T> GetFunctor(string line) {
+		
+		return commands[line];
 	}
-	~CommandMap();
+	~CommandMap() {}
 };
 
 
@@ -223,7 +257,7 @@ class Container //:	public Loader, public Sorter
 	vector <T> box;
 	vector <string> commandline;
 public:
-	Container();
+	Container() : loader(new ConsoleLoader<T>), sorter(new UsualSort<T>){}
 //	virtual void LoadConsole();
 //	virtual void LoadFile();
 //	virtual void next();
@@ -231,12 +265,42 @@ public:
 //	virtual bool end();
 //	virtual void UsualSorting();
 //	virtual void QuickSorting();
-	void Sort();
-	void Add();
-	void SwitchLoader(string type);
-	void SwitchSorter(string type);
-	void AddCommand(string line);
-	void SetCommandLine(vector <string> line);
+	void Sort() {
+		box = sorter->Sorting(box);
+	}
+	void Add() {
+		box.push_back(loader->GetObject());
+	}
+	void SwitchLoader(string type) {
+		if (type == "console") {
+			shared_ptr <ConsoleLoader> p(new ConsoleLoader);
+			loader = p;
+		}
+		else if (type == "file") {
+			shared_ptr <FileLoader> p(new FileLoader);
+			loader = p;
+		}
+		else {
+			shared_ptr <ConsoleLoader> p(new ConsoleLoader);
+			loader = p;
+		}
+	}
+	void SwitchSorter(string type) {
+		if (type == "usual") {
+			shared_ptr <UsualSort> p(new UsualSort);
+			sorter = p;
+		}
+		else if (type == "quick") {
+			shared_ptr <QuickSort> p(new QuickSort);
+			sorter = p;
+		}
+	}
+	void AddCommand(string line) {
+		commandline.push_back(line);
+	}
+	void SetCommandLine(vector <string> line) {
+		commandline = line;
+	}
 	T Calculate() {
 		T item = box[0];
 		CommandMap<T> FunctorMap = CommandMap<T>(commandline);
@@ -248,15 +312,31 @@ public:
 			lim = box.size() - 1;
 		}
 		for (int i = 0; i < lim; i++) {
-			item = FunctorMap.GetFunctor(i)(item, box[i + 1]);
+			item = FunctorMap.GetFunctor(commandline[i])(item, box[i + 1]);
 		}
 		return item;
 	}
-	ContainerIterator<T> GetIterator();
-	void Delete(int number);
-	void Print();
-	T operator[](int a);
-	~Container();
+	ContainerIterator<T> GetIterator() {
+		return ContainerIterator<T>(&box, box.size());
+	}
+	void Delete(int number) {
+		if (number >= box.size()) {
+			throw Error();
+		}
+		box.erase(box.begin() + number);
+	}
+	void Print() {
+		for (int i = 0; i < box.size(); i++) {
+			cout << box[i] << endl;
+		}
+	}
+	T operator[](int a) {
+		if (a >= box.size() || a < 0) {
+			throw Error();
+		}
+		return box[a];
+	}
+	~Container(){}
 };
 
 
