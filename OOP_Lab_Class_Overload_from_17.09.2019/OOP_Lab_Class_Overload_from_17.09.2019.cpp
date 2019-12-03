@@ -9,17 +9,18 @@
 #include <iostream>
 
 
+
 int main()
 {
-	//char a[] = "[1, 1; 1a, -10000]";
-	//Matrix A;
+	
 	try {
-		Container<Matrix> A;
-		
+		vector <Container<Matrix>> A;
+		Container<Matrix> B;
+		A.push_back(B);
 		for (int i = 0; i < 4; i++) {
-			A.Add();
+			A[0].Add();
 		}
-		A.Sort();
+		A[0].Sort();
 		//ContainerIterator<Matrix> B = A.GetIterator();
 		vector <string> operations;
 		for (int i = 0; i < 3; i++) {
@@ -27,8 +28,8 @@ int main()
 			cin >> a;
 			operations.push_back(a);
 		}
-		A.SetCommandLine(operations);
-		cout << A.Calculate();
+		A[0].SetCommandLine(operations);
+		cout << A[0].Calc();
 	}
 	catch(Error e){
 		e.PrintError();

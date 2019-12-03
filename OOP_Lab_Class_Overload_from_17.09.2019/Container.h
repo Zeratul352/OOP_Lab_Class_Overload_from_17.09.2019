@@ -212,11 +212,55 @@ public:
 template <class T>
 class CalcFunctor
 {
-	T someObject;
+	T result;
+	vector <string> commands;
+	int index = 0;
+	T(*Action)(T first, T second);
 public:
-	CalcFunctor():someObject(0){}
-	CalcFunctor operator()(T object) {
-		return someObject + object;
+	CalcFunctor(vector <string> lines):result(0){
+		commands = lines;
+	}
+	void operator()(T object) {
+		if (result == T(0)) {
+			result = object;
+			return;
+		}
+		string line = commands[index];
+		char operation = line[0];
+		line.erase(line.begin());
+		int module = 0;
+		if (line == "") {
+			module = 0;
+		}
+		else {
+			module = stoi(line);
+		}
+		switch (operation) {
+		case '+': {
+			Action = T::Plus;
+			break;
+		}
+		case '-': {
+			Action = T::Minus;
+			break;
+		}
+		case '*': {
+			Action = T::Multiply;
+			break;
+		}
+		case '/': {
+			Action = T::Devide;
+			break;
+		}
+		default:throw BadCommandException();
+		}
+
+		result = Action(result, object).Module(module);
+		index++;
+		
+	}
+	T GetResult() {
+		return result;
 	}
 	~CalcFunctor() {}
 };
@@ -226,7 +270,7 @@ class CommandMap
 	map <string, Calculator<T>> commands;
 public:
 	CommandMap(){}
-	CommandMap(vector <string> commandline) {
+	/*CommandMap(vector <string> commandline) {
 		//commands = map<string, Calculator<T>>(commandline.size());
 		for (int i = 0; i < commandline.size(); i++) {
 			Calculator<T> functor = Calculator<T>(commandline[i]);
@@ -234,13 +278,18 @@ public:
 			//commands[i]->second = functor;
 			commands.insert(pair<string, Calculator<T>>(commandline[i], functor));
 		}
-	}
+	}*/
 	Calculator<T> GetFunctor(string line) {
-		
+		if (commands.find(line)) {
+			return commands[line];
+		}
+		Calculator<T> functor = Calculator<T>(line);
+		commands.insert(pair<string, Calculator<T>>(line, functor));
 		return commands[line];
 	}
 	~CommandMap() {}
 };
+CommandMap<Matrix> MyMap();
 
 
 template <class T>
@@ -303,7 +352,7 @@ public:
 	}
 	T Calculate() {
 		T item = box[0];
-		CommandMap<T> FunctorMap = CommandMap<T>(commandline);
+		//CommandMap<T> FunctorMap = CommandMap<T>(commandline);   // global.....
 		int lim;
 		if (box.size() > commandline.size()) {
 			lim = commandline.size();
@@ -311,10 +360,16 @@ public:
 		else {
 			lim = box.size() - 1;
 		}
+		
 		for (int i = 0; i < lim; i++) {
-			item = FunctorMap.GetFunctor(commandline[i])(item, box[i + 1]);
+			item = MyMap.GetFunctor(commandline[i])(item, box[i + 1]);
 		}
 		return item;
+	}
+	T Calc() {
+		CalcFunctor<T> AFunctor = CalcFunctor<T>(commandline);
+		AFunctor = std::for_each(box.cbegin(), box.cend(), AFunctor);
+		return AFunctor.GetResult();
 	}
 	ContainerIterator<T> GetIterator() {
 		return ContainerIterator<T>(&box, box.size());
