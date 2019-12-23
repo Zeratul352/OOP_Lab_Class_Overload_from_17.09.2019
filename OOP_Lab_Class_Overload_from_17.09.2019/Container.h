@@ -132,7 +132,7 @@ public:
 			for (int j = 0; j < number - 1 - i; j++) {
 				
 				if (arr[j] > arr[j + 1]) {
-					Matrix temp = arr[j];
+					T temp = arr[j];
 					arr[j] = arr[j + 1];
 					arr[j + 1] = temp;
 				}
@@ -221,7 +221,8 @@ public:
 		commands = lines;
 	}
 	void operator()(T object) {
-		if (result == T(0)) {
+		T obj = T(0);
+		if (result == obj) {
 			result = object;
 			return;
 		}

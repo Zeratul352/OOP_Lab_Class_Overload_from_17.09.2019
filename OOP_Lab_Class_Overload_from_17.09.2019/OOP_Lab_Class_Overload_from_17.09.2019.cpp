@@ -6,6 +6,7 @@
 #include "Matrix.h"
 #include "Error.h"
 #include "Container.h"
+#include "Polynom.h"
 #include <iostream>
 
 
@@ -14,8 +15,8 @@ int main()
 {
 	
 	try {
-		vector <Container<Matrix>> A;
-		Container<Matrix> B;
+		vector <Container<Polynom>> A;
+		Container<Polynom> B;
 		A.push_back(B);
 		for (int i = 0; i < 4; i++) {
 			A[0].Add();

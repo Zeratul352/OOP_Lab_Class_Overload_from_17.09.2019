@@ -153,8 +153,10 @@
   <ItemGroup>
     <ClInclude Include="Container.h" />
     <ClInclude Include="Error.h" />
+    <ClInclude Include="except.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Polynom.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Container.cpp" />
@@ -167,6 +169,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Polynom.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
